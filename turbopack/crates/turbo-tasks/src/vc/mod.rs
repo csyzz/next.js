@@ -8,7 +8,7 @@ pub(crate) mod resolved;
 mod traits;
 
 use std::{
-    any::Any,
+    any::{Any, TypeId},
     fmt::Debug,
     future::{Future, IntoFuture},
     hash::{Hash, Hasher},
@@ -493,6 +493,12 @@ where
     where
         K: VcValueTrait + ?Sized,
     {
+        debug_assert!(
+            <K as VcValueTrait>::get_trait_type_id() != <T as VcValueTrait>::get_trait_type_id(),
+            "Attempted to cast a type {} to itself, which is pointless. Use the value directly \
+             instead.",
+            crate::registry::get_trait(<T as VcValueTrait>::get_trait_type_id()).global_name
+        );
         let raw_vc: RawVc = vc.node;
         let raw_vc = raw_vc
             .resolve_trait(<K as VcValueTrait>::get_trait_type_id())
@@ -512,14 +518,7 @@ where
     where
         K: Upcast<T> + VcValueTrait + ?Sized,
     {
-        let raw_vc: RawVc = vc.node;
-        let raw_vc = raw_vc
-            .resolve_trait(<K as VcValueTrait>::get_trait_type_id())
-            .await?;
-        Ok(raw_vc.map(|raw_vc| Vc {
-            node: raw_vc,
-            _t: PhantomData,
-        }))
+        Self::try_resolve_sidecast(vc).await
     }
 
     /// Attempts to downcast the given `Vc<Box<dyn T>>` to a `Vc<K>`, where `K`
@@ -531,6 +530,12 @@ where
     where
         K: Upcast<T> + VcValueType,
     {
+        debug_assert!(
+            TypeId::of::<K>() != TypeId::of::<T>(),
+            "Attempted to cast a type {} to itself, which is pointless. Use the value directly \
+             instead.",
+            crate::registry::get_value_type(<K as VcValueType>::get_value_type_id()).global_name
+        );
         let raw_vc: RawVc = vc.node;
         let raw_vc = raw_vc
             .resolve_value(<K as VcValueType>::get_value_type_id())
