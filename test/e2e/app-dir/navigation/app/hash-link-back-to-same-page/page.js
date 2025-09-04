@@ -2,8 +2,8 @@ import Link from 'next/link'
 import '../hash/global.css'
 
 export default function HashPage() {
-  // Create list of 5000 items that all have unique id
-  const items = Array.from({ length: 5000 }, (_, i) => ({ id: i }))
+  // Create list of 1000 items that all have unique id
+  const items = Array.from({ length: 1000 }, (_, i) => ({ id: i }))
 
   return (
     <div style={{ fontFamily: 'sans-serif', fontSize: '16px' }}>
