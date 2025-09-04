@@ -39,12 +39,6 @@ impl ChunkType for EcmascriptChunkType {
         batch_groups: Vec<ResolvedVc<ChunkItemBatchGroup>>,
         referenced_output_assets: Vc<OutputAssets>,
     ) -> Result<Vc<Box<dyn Chunk>>> {
-        let Some(chunking_context) =
-            Vc::try_resolve_downcast::<Box<dyn ChunkingContext>>(chunking_context).await?
-        else {
-            bail!("Ecmascript chunking context not found");
-        };
-
         let content = EcmascriptChunkContent {
             chunk_items: chunk_items
                 .iter()

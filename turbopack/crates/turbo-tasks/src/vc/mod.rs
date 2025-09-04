@@ -28,7 +28,7 @@ pub use self::{
     operation::{OperationValue, OperationVc},
     read::{ReadOwnedVcFuture, ReadVcFuture, VcDefaultRead, VcRead, VcTransparentRead},
     resolved::ResolvedVc,
-    traits::{Dynamic, Upcast, VcValueTrait, VcValueType},
+    traits::{Dynamic, Upcast, UpcastStrict, VcValueTrait, VcValueType},
 };
 use crate::{
     CellId, RawVc, ResolveTypeError,
@@ -516,7 +516,7 @@ where
     /// Returns `None` if the underlying value type is not a `K`.
     pub async fn try_resolve_downcast<K>(vc: Self) -> Result<Option<Vc<K>>, ResolveTypeError>
     where
-        K: Upcast<T> + VcValueTrait + ?Sized,
+        K: UpcastStrict<T> + VcValueTrait + ?Sized,
     {
         Self::try_resolve_sidecast(vc).await
     }
@@ -528,7 +528,7 @@ where
     /// Returns `None` if the underlying value type is not a `K`.
     pub async fn try_resolve_downcast_type<K>(vc: Self) -> Result<Option<Vc<K>>, ResolveTypeError>
     where
-        K: Upcast<T> + VcValueType,
+        K: UpcastStrict<T> + VcValueType,
     {
         debug_assert!(
             TypeId::of::<K>() != TypeId::of::<T>(),
@@ -570,7 +570,7 @@ where
 
 impl<T> ValueDebugFormat for Vc<T>
 where
-    T: Upcast<Box<dyn ValueDebug>> + Send + Sync + ?Sized,
+    T: UpcastStrict<Box<dyn ValueDebug>> + Send + Sync + ?Sized,
 {
     fn value_debug_format(&self, depth: usize) -> ValueDebugFormatString<'_> {
         ValueDebugFormatString::Async(Box::pin(async move {

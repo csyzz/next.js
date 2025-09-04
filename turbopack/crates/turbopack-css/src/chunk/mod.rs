@@ -273,11 +273,7 @@ impl OutputChunk for CssChunk {
             .await?;
         let imports_chunk_items: Vec<_> = entries_chunk_items
             .iter()
-            .map(|&chunk_item| async move {
-                let Some(css_item) = ResolvedVc::try_downcast::<Box<dyn CssChunkItem>>(chunk_item)
-                else {
-                    return Ok(vec![]);
-                };
+            .map(|&css_item| async move {
                 Ok(css_item
                     .content()
                     .await?
@@ -290,7 +286,7 @@ impl OutputChunk for CssChunk {
                             None
                         }
                     })
-                    .collect())
+                    .collect::<Vec<_>>())
             })
             .try_join()
             .await?

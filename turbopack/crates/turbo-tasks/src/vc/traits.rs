@@ -51,6 +51,13 @@ where
 {
 }
 
+/// A speialization of [`Upcast`] that ensures that the upcast is strict meaning that T !== Self
+pub unsafe trait UpcastStrict<T>: Upcast<T>
+where
+    T: VcValueTrait + ?Sized,
+{
+}
+
 /// Marker trait that indicates that a [`Vc<Self>`][crate::Vc] can accept all
 /// methods declared on a [`Vc<T>`][crate::Vc].
 ///

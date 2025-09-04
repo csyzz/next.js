@@ -12,7 +12,7 @@ use anyhow::Result;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    RawVc, Upcast, VcRead, VcTransparentRead, VcValueTrait, VcValueType,
+    RawVc, Upcast, UpcastStrict, VcRead, VcTransparentRead, VcValueTrait, VcValueType,
     debug::{ValueDebug, ValueDebugFormat, ValueDebugFormatString},
     trace::{TraceRawVcs, TraceRawVcsContext},
     vc::Vc,
@@ -266,7 +266,7 @@ where
     /// See also: [`Vc::try_resolve_downcast`].
     pub fn try_downcast<K>(this: Self) -> Option<ResolvedVc<K>>
     where
-        K: Upcast<T> + VcValueTrait + ?Sized,
+        K: UpcastStrict<T> + VcValueTrait + ?Sized,
     {
         // this is just a more type-safe version of a sidecast
         Self::try_sidecast(this)
@@ -279,7 +279,7 @@ where
     /// See also: [`Vc::try_resolve_downcast_type`].
     pub fn try_downcast_type<K>(this: Self) -> Option<ResolvedVc<K>>
     where
-        K: Upcast<T> + VcValueType,
+        K: UpcastStrict<T> + VcValueType,
     {
         // Runtime assertion to catch K == T cases with a clear error message
         // This will be optimized away in release builds but helps during development
@@ -328,7 +328,7 @@ where
 
 impl<T> ValueDebugFormat for ResolvedVc<T>
 where
-    T: Upcast<Box<dyn ValueDebug>> + Send + Sync + ?Sized,
+    T: UpcastStrict<Box<dyn ValueDebug>> + Send + Sync + ?Sized,
 {
     fn value_debug_format(&self, depth: usize) -> ValueDebugFormatString<'_> {
         self.node.value_debug_format(depth)
