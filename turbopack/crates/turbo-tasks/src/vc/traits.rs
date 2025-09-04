@@ -52,6 +52,11 @@ where
 }
 
 /// A speialization of [`Upcast`] that ensures that the upcast is strict meaning that T !== Self
+///
+/// # Safety
+///
+/// The implementor of this trait must ensure that `Self` implements the
+/// trait `T` and that `Self` is not equal to `T`.
 pub unsafe trait UpcastStrict<T>: Upcast<T>
 where
     T: VcValueTrait + ?Sized,
