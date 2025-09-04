@@ -385,7 +385,7 @@ impl<T: ChunkingContext + Send + Upcast<Box<dyn ChunkingContext>>> ChunkingConte
         chunk_group: ChunkGroup,
         module_graph: Vc<ModuleGraph>,
     ) -> Vc<OutputAssets> {
-        root_chunk_group_assets(Vc::upcast(self), ident, chunk_group, module_graph)
+        root_chunk_group_assets(Vc::upcast_loose(self), ident, chunk_group, module_graph)
     }
 
     fn evaluated_chunk_group_assets(
@@ -396,7 +396,7 @@ impl<T: ChunkingContext + Send + Upcast<Box<dyn ChunkingContext>>> ChunkingConte
         availability_info: AvailabilityInfo,
     ) -> Vc<OutputAssets> {
         evaluated_chunk_group_assets(
-            Vc::upcast(self),
+            Vc::upcast_loose(self),
             ident,
             chunk_group,
             module_graph,
@@ -413,7 +413,7 @@ impl<T: ChunkingContext + Send + Upcast<Box<dyn ChunkingContext>>> ChunkingConte
         availability_info: AvailabilityInfo,
     ) -> Vc<Box<dyn OutputAsset>> {
         entry_chunk_group_asset(
-            Vc::upcast(self),
+            Vc::upcast_loose(self),
             path,
             evaluatable_assets,
             module_graph,
@@ -446,7 +446,7 @@ impl<T: ChunkingContext + Send + Upcast<Box<dyn ChunkingContext>>> ChunkingConte
         extra_chunks: Vc<OutputAssets>,
     ) -> Vc<Box<dyn OutputAsset>> {
         entry_chunk_group_asset(
-            Vc::upcast(self),
+            Vc::upcast_loose(self),
             path,
             evaluatable_assets,
             module_graph,
@@ -463,7 +463,7 @@ impl<T: ChunkingContext + Send + Upcast<Box<dyn ChunkingContext>>> ChunkingConte
         availability_info: AvailabilityInfo,
     ) -> Vc<OutputAssets> {
         chunk_group_assets(
-            Vc::upcast(self),
+            Vc::upcast_loose(self),
             ident,
             chunk_group,
             module_graph,

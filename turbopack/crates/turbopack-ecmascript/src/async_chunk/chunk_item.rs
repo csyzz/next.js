@@ -78,11 +78,7 @@ impl EcmascriptChunkItem for AsyncLoaderChunkItem {
         let id = if let Some(placeable) =
             Vc::try_resolve_downcast::<Box<dyn EcmascriptChunkPlaceable>>(*module.inner).await?
         {
-            Some(
-                placeable
-                    .chunk_item_id(*ResolvedVc::upcast(this.chunking_context))
-                    .await?,
-            )
+            Some(placeable.chunk_item_id(*this.chunking_context).await?)
         } else {
             None
         };

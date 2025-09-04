@@ -408,9 +408,23 @@ where
 
     /// Upcasts the given `Vc<T>` to a `Vc<Box<dyn K>>`.
     ///
-    /// This is also available as an `Into`/`From` conversion.
+    /// This has a loose type constraint which would allow upcasting to the same type, prefer using
+    /// [`Vc::upcast`] when possible. See also: [`Vc::upcast_loose`].  This is useful for
+    /// extension traits and other more generic usecases.
     #[inline(always)]
     pub fn upcast<K>(vc: Self) -> Vc<K>
+    where
+        T: UpcastStrict<K>,
+        K: VcValueTrait + ?Sized,
+    {
+        Self::upcast_loose(vc)
+    }
+
+    /// Upcasts the given `Vc<T>` to a `Vc<Box<dyn K>>`.
+    ///
+    /// This is also available as an `Into`/`From` conversion.
+    #[inline(always)]
+    pub fn upcast_loose<K>(vc: Self) -> Vc<K>
     where
         T: Upcast<K>,
         K: VcValueTrait + ?Sized,
@@ -420,7 +434,6 @@ where
             _t: PhantomData,
         }
     }
-
     /// Runs the operation, but ignores the returned Vc. Use that when only interested in running
     /// the task for side effects.
     pub async fn as_side_effect(self) -> Result<()> {
