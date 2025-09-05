@@ -202,22 +202,22 @@ where
         T: UpcastStrict<K>,
         K: VcValueTrait + ?Sized,
     {
-        Self::upcast_loose(this)
+        Self::upcast_non_strict(this)
     }
 
     /// Upcasts the given `ResolvedVc<T>` to a `ResolvedVc<Box<dyn K>>`.
     ///
     /// This has a loose type constraint which would allow upcasting to the same type, prefer using
-    /// [`ResolvedVc::upcast`] when possible. See also: [`Vc::upcast_loose`].  This is useful for
-    /// extension traits and other more generic usecases.
+    /// [`ResolvedVc::upcast`] when possible. See also: [`Vc::upcast_non_strict`].  This is
+    /// useful for extension traits and other more generic usecases.
     #[inline(always)]
-    pub fn upcast_loose<K>(this: Self) -> ResolvedVc<K>
+    pub fn upcast_non_strict<K>(this: Self) -> ResolvedVc<K>
     where
         T: Upcast<K>,
         K: VcValueTrait + ?Sized,
     {
         ResolvedVc {
-            node: Vc::upcast_loose(this.node),
+            node: Vc::upcast_non_strict(this.node),
         }
     }
 

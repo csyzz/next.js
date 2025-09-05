@@ -408,23 +408,23 @@ where
 
     /// Upcasts the given `Vc<T>` to a `Vc<Box<dyn K>>`.
     ///
-    /// This has a loose type constraint which would allow upcasting to the same type, prefer using
-    /// [`Vc::upcast`] when possible. See also: [`Vc::upcast_loose`].  This is useful for
-    /// extension traits and other more generic usecases.
+    /// This is also available as an `Into`/`From` conversion.
     #[inline(always)]
     pub fn upcast<K>(vc: Self) -> Vc<K>
     where
         T: UpcastStrict<K>,
         K: VcValueTrait + ?Sized,
     {
-        Self::upcast_loose(vc)
+        Self::upcast_non_strict(vc)
     }
 
-    /// Upcasts the given `Vc<T>` to a `Vc<Box<dyn K>>`.
+    /// Upcasts the given `Vc<T>` to a `Vc<Box<dyn K>>`
     ///
-    /// This is also available as an `Into`/`From` conversion.
+    /// This has a loose type constraint which would allow upcasting to the same type, prefer using
+    /// [`Vc::upcast`] when possible.  This is useful for
+    /// extension traits and other more generic usecases.
     #[inline(always)]
-    pub fn upcast_loose<K>(vc: Self) -> Vc<K>
+    pub fn upcast_non_strict<K>(vc: Self) -> Vc<K>
     where
         T: Upcast<K>,
         K: VcValueTrait + ?Sized,

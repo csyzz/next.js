@@ -108,7 +108,7 @@ impl NodeJsChunkingContextBuilder {
     {
         self.chunking_context
             .chunking_configs
-            .push((ResolvedVc::upcast_loose(ty), chunking_config));
+            .push((ResolvedVc::upcast_non_strict(ty), chunking_config));
         self
     }
 
