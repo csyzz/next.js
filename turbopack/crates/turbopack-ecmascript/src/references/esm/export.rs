@@ -297,8 +297,7 @@ async fn find_export_from_reexports(
     export_name: RcStr,
 ) -> Result<Vc<FindExportFromReexportsResult>> {
     // TODO why do we need a special case for this?
-    if let Some(module) =
-        Vc::try_resolve_downcast_type::<EcmascriptModulePartAsset>(*module).await?
+    if let Some(module) = ResolvedVc::try_downcast_type::<EcmascriptModulePartAsset>(module)
         && matches!(module.await?.part, ModulePart::Exports)
     {
         let module_part = EcmascriptModulePartAsset::select_part(
@@ -544,11 +543,7 @@ impl EsmExports {
                 if !exports.contains_key(export) {
                     exports.insert(
                         export.clone(),
-                        EsmExport::ImportedBinding(
-                            ResolvedVc::upcast(esm_ref),
-                            export.clone(),
-                            false,
-                        ),
+                        EsmExport::ImportedBinding(esm_ref, export.clone(), false),
                     );
                 }
             }
@@ -593,7 +588,7 @@ impl EsmExports {
             let id = if let Some(module) = scope_hoisting_context.module()
                 && !expanded.dynamic_exports.is_empty()
             {
-                Some(module.chunk_item_id(Vc::upcast(chunking_context)).await?)
+                Some(module.chunk_item_id(chunking_context).await?)
             } else {
                 None
             };
@@ -811,7 +806,7 @@ impl EsmExports {
         let esm_exports = vec![CodeGenerationHoistedStmt::new(
             rcstr!("__turbopack_esm__"),
             if let Some(module) = scope_hoisting_context.module() {
-                let id = module.chunk_item_id(Vc::upcast(chunking_context)).await?;
+                let id = module.chunk_item_id(chunking_context).await?;
                 quote!("$turbopack_esm($getters, $id);" as Stmt,
                     turbopack_esm: Expr = TURBOPACK_ESM.into(),
                     getters: Expr = getters,

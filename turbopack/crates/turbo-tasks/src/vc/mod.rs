@@ -8,7 +8,7 @@ pub(crate) mod resolved;
 mod traits;
 
 use std::{
-    any::{Any, TypeId},
+    any::Any,
     fmt::Debug,
     future::{Future, IntoFuture},
     hash::{Hash, Hasher},
@@ -543,12 +543,6 @@ where
     where
         K: UpcastStrict<T> + VcValueType,
     {
-        debug_assert!(
-            TypeId::of::<K>() != TypeId::of::<T>(),
-            "Attempted to cast a type {} to itself, which is pointless. Use the value directly \
-             instead.",
-            crate::registry::get_value_type(<K as VcValueType>::get_value_type_id()).global_name
-        );
         let raw_vc: RawVc = vc.node;
         let raw_vc = raw_vc
             .resolve_value(<K as VcValueType>::get_value_type_id())

@@ -1,5 +1,5 @@
 use std::{
-    any::{Any, TypeId},
+    any::Any,
     fmt::Debug,
     future::IntoFuture,
     hash::{Hash, Hasher},
@@ -295,15 +295,6 @@ where
     where
         K: UpcastStrict<T> + VcValueType,
     {
-        // Runtime assertion to catch K == T cases with a clear error message
-        // This will be optimized away in release builds but helps during development
-        // We use trait type IDs since T and K might be trait objects (?Sized)
-        debug_assert!(
-            TypeId::of::<K>() != TypeId::of::<T>(),
-            "Attempted to cast a type {} to itself, which is pointless. Use the value directly \
-             instead.",
-            crate::registry::get_value_type(<K as VcValueType>::get_value_type_id()).global_name
-        );
         let raw_vc = this.node.node;
         raw_vc
             .resolved_is_type(<K as VcValueType>::get_value_type_id())

@@ -603,9 +603,7 @@ impl EsmAssetReference {
                                         unreachable!();
                                     }
                                     ReferencedAsset::Some(asset) => {
-                                        let id = asset
-                                            .chunk_item_id(Vc::upcast(chunking_context))
-                                            .await?;
+                                        let id = asset.chunk_item_id(chunking_context).await?;
                                         let (sym, ctxt) =
                                             ident.into_module_namespace_ident().unwrap();
                                         let name = Ident::new(
