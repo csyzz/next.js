@@ -472,7 +472,8 @@ export default class DevServer extends Server {
         request.url.includes('/_next/static') ||
         request.url.includes('/__nextjs_original-stack-frame') ||
         request.url.includes('/__nextjs_source-map') ||
-        request.url.includes('/__nextjs_error_feedback')
+        request.url.includes('/__nextjs_error_feedback') ||
+        request.url.includes('/__nextjs_chat')
       ) {
         return { finished: false }
       }

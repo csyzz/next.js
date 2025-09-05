@@ -11,6 +11,7 @@ import {
   getOverlayMiddleware,
   getSourceMapMiddleware,
 } from './middleware-webpack'
+import { getChatMiddleware } from './middleware-chat'
 import { WebpackHotMiddleware } from './hot-middleware'
 import { join, relative, isAbsolute, posix, dirname } from 'path'
 import {
@@ -1595,6 +1596,7 @@ export default class HotReloaderWebpack implements NextJsHotReloaderInterface {
         serverStats: () => this.serverStats,
         edgeServerStats: () => this.edgeServerStats,
       }),
+      getChatMiddleware(),
       getNextErrorFeedbackMiddleware(this.telemetry),
       getDevOverlayFontMiddleware(),
       getDisableDevIndicatorMiddleware(),

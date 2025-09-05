@@ -102,6 +102,7 @@
     ]
   },
   "dependencies": {
+    "@anthropic-ai/claude-code": "1.0.105",
     "@next/env": "15.5.1-canary.24",
     "@swc/helpers": "0.5.15",
     "caniuse-lite": "^1.0.30001579",

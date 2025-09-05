@@ -1,60 +1,27 @@
 import { useState } from 'react'
 import { ChatHeader } from './chat-header'
-import { ChatMessage, type Message } from './chat-message'
+import { ChatMessage } from './chat-message'
 import { ChatInput } from './chat-input'
+import { useChatMessages } from './use-chat-messages'
+import { useChatStream } from './use-chat-stream'
 import './chat-interface.css'
-
-const MOCK_MESSAGES: Message[] = [
-  {
-    id: '1',
-    content: 'Change this button to blue',
-    role: 'user',
-    timestamp: new Date(),
-  },
-  {
-    id: '2',
-    content: 'Done!',
-    role: 'assistant',
-    timestamp: new Date(),
-  },
-]
 
 interface ChatInterfaceProps {
   onClose?: () => void
 }
 
 export function ChatInterface({ onClose }: ChatInterfaceProps) {
-  const [messages, setMessages] = useState<Message[]>(MOCK_MESSAGES)
-  const [isLoading, setIsLoading] = useState(false)
   const [isMinimized, setIsMinimized] = useState(false)
+  const { messages, setMessages, isLoading, setIsLoading } = useChatMessages()
+  const { sendMessage } = useChatStream(setMessages, setIsLoading)
 
   const handleToggleMinimize = () => {
     setIsMinimized((prev) => !prev)
   }
 
   const handleSubmitMessage = async (content: string) => {
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      content,
-      role: 'user',
-      timestamp: new Date(),
-    }
-
-    setMessages((prev) => [...prev, userMessage])
-    setIsLoading(true)
-
-    // Simulate AI response
-    setTimeout(() => {
-      const aiMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        content:
-          "I'd be happy to help! Could you provide more details about what you're trying to accomplish?",
-        role: 'assistant',
-        timestamp: new Date(),
-      }
-      setMessages((prev) => [...prev, aiMessage])
-      setIsLoading(false)
-    }, 1000)
+    if (isLoading) return
+    await sendMessage(content)
   }
 
   return (
